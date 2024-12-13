@@ -57,34 +57,68 @@ class UserDashboardController extends Controller
      * Display the specified resource.
      */
     public function show()
-    {
-        $showUserDashboard = UserDashboard::all();
-        dd($showUserDashboard);
-        die;    
-        return view('/dashboard', compact('showUserDashboard'));
-    }
+{
+    // Retrieve all records from UserDashboard table
+    $showUserDashboard = UserDashboard::all();
+    //dd($showUserDashboard);
+    // Pass the data to the view
+    return view('dashboard', compact('showUserDashboard'));
+}
 
+public function delete($id){
+    $deleteUser = UserDashboard::find($id);
+   if($deleteUser){
+    $deleteUser->delete();
+    return response()->json(['success' => true, 'message' => 'User deleted successfully']);
+   }else{
+    return response()->json(['message' => 'User not found'], 404);
+   }
+}
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(UserDashboard $userDashboard)
+    public function edit($id)
     {
-        //
+        
+        $editUserDashboard = UserDashboard::find($id);
+
+        if ($editUserDashboard) {
+            return response()->json([
+                'success' => true,
+                'user' => $editUserDashboard
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ]);
+        }
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UserDashboard $userDashboard)
-    {
-        //
-    }
+    public function update(Request $request, $id)
+{
+    // Find user or return an error if not found
+    $updateData = UserDashboard::find($id);
+   
+    $updateData->name = $request->editName;
+    $updateData->email = $request->editEmail;
+    $updateData->phone = $request->editPhone;
+    $updateData->address = $request->editAddress;
+    $updateData->country = $request->editCountry;
+    $updateData->city = $request->editCity;
+   // $updateData->skills = implode(',', $request->skills); 
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    $updateData->gender = $request->editGender;
+    $updateData->note = $request->editNote;
+    $updateData->save();
+
+    return response()->json(['success' => true, 'message' => 'User updated successfully']);
+
+}
+
     public function destroy(UserDashboard $userDashboard)
     {
-        //
+  
     }
 }

@@ -16,7 +16,7 @@
 </head>
 <body>
 <h2>User Registration Form</h2>
-<form action="{{route('create-user')}}" method="post" enctype="multipart/form-data">
+<form action="{{route('create.user')}}" method="post" enctype="multipart/form-data">
 @csrf
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" ><br>
@@ -31,12 +31,10 @@
     <textarea id="address" name="address" ></textarea><br>
 
     <label>Gender:</label>
-    <input type="radio" id="male" name="gender" value="Male">
+    <input type="radio" id="male" name="gender" value="male">
     <label for="male">Male</label>
-    <input type="radio" id="female" name="gender" value="Female">
+    <input type="radio" id="female" name="gender" value="female">
     <label for="female">Female</label>
-    <input type="radio" id="other" name="gender" value="Other">
-    <label for="other">Other</label><br>
 
     <label for="country">Country:</label>
     <select id="country" name="country" >
@@ -67,9 +65,6 @@
     <label for="javascript">JavaScript</label>
     <input type="checkbox" id="python" name="skills[]" value="Python">
     <label for="python">Python</label><br>
-
-    <label for="image">Upload Image:</label>
-    <input type="file" id="image" name="image" accept="image/*"><br>
 
     <label for="address">Note:</label>
     <textarea id="note" name="note" ></textarea><br>
