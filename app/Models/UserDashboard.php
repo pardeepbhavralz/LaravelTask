@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserDashboard extends Model
 {
     protected $fillable = [ 
-        "name","email","address","phone","gender","country","city","skills","image","note"
+        "name","email","address","phone","gender","country","city","skills","department","image","note"
 
     ];
 }

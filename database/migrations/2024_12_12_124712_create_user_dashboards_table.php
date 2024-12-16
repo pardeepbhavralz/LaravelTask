@@ -20,6 +20,7 @@ return new class extends Migration
                     $table->boolean(column: 'gender')->default(1)->comment('1=male,0=female');
                     $table->string(column: 'country');
                     $table->string(column: 'city');
+                    $table->string(column: 'department');
                     $table->string(column: 'skills');
                     $table->timestamp('image')->nullable();
                     $table->string(column: 'note');

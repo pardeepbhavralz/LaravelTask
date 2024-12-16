@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User's Dashboard</title>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -134,7 +134,18 @@
 </head>
 <body>
     <h1>Dashboard</h1>
-    <a href="{{route('user.add')}}" class="add-user-link">Add New User Here</a>
+
+    <div id="manageUsers" class="department-manage" style="display:flex; cursor:pointer;">Manage-Department &nbsp;  
+           <i class="fa fa-plus" style="font-size:22px"></i>
+</div>
+
+    <div class="filter-input" style="float:right; padding-right:4rem;">
+         <input type="text" name="filter-input" class="filter-input" id="filter-input" placeholder="Enter any key">
+    </div>
+
+    <div class="create_newUser" style="padding-left:4rem;">
+         <a href="{{route('user.add')}}" class="add-user-link" >Add New User Here</a>
+    </div>
 
     <div class="showData">
         <div class="header">
@@ -146,29 +157,34 @@
             <div class="header-item">Gender</div>
             <div class="header-item">Country</div>
             <div class="header-item">City</div>
+            <div class="header-item">Department</div>
             <div class="header-item">Skills</div>
             <div class="header-item">Note</div>
             <div class="header-item">Action</div>
         </div>
         
-        @foreach ($showUserDashboard as $index => $user)
-        <div class="row" id="user-{{ $user->id }}">
-            <div class="row-item">{{ $index + 1 }}</div>
-            <div class="row-item">{{ $user->name }}</div>
-            <div class="row-item">{{ $user->email }}</div>
-            <div class="row-item">{{ $user->phone }}</div>
-            <div class="row-item">{{ $user->address }}</div>
-            <div class="row-item">{{ $user->gender }}</div>
-            <div class="row-item">{{ $user->country }}</div>
-            <div class="row-item">{{ $user->city }}</div>
-            <div class="row-item">{{ $user->skills }}</div>
-            <div class="row-item">{{ $user->note }}</div>
-            <div class="row-item">
+        <div id="user-list" class="oneFullUser">
+    @foreach ($showUserDashboard as $index => $user)
+    <div class="row" id="user-{{ $user->id }}">
+        <div class="row-item">{{ $index + 1 }}</div>
+        <div class="row-item">{{ $user->name }}</div>
+        <div class="row-item">{{ $user->email }}</div>
+        <div class="row-item">{{ $user->phone }}</div>
+        <div class="row-item">{{ $user->address }}</div>
+        <div class="row-item">{{ $user->gender }}</div>
+        <div class="row-item">{{ $user->country }}</div>
+        <div class="row-item">{{ $user->city }}</div>
+        <div class="row-item">{{ $user->department }}</div>
+        <div class="row-item">{{ $user->skills }}</div>
+        <div class="row-item">{{ $user->note }}</div>
+        <div class="row-item">
             <button class="update-user" data-id="{{ $user->id }}" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
-                <button class="delete-user" data-id="{{ $user->id }}" >Delete</button>
-            </div>
+            <button class="delete-user" data-id="{{ $user->id }}">Delete</button>
         </div>
-        @endforeach
+    </div>
+    @endforeach
+</div>
+
     </div>
 
 <!-- // edit model open -->
@@ -179,12 +195,12 @@
           <h5 class="modal-title" id="exampleModalLabel">Create New User</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <class="modal-body" style="padding:1rem;">
           <!-- Form starts here -->
 
             <div class="mb-3">
               <label for="name" class="form-label">Name:</label>
-              <input type="text"  id="user-id-update">
+              <input type="hidden"  id="user-id-update">
               <input type="text" id="editName" name="editName" class="form-control">
             </div>
 
@@ -214,6 +230,8 @@
               </div>
             </div>
 
+            
+
             <div class="mb-3">
               <label for="country" class="form-label">Country:</label>
               <select id="editCountry" name="editCountry" class="form-select">
@@ -237,6 +255,17 @@
                 <option value="chandigarh">Chandigarh</option>
               </select>
             </div>
+
+            <label for="department">Department</label>
+    <select id="department" name="editdepartment" >
+        <option value="">-- Select --</option>
+        <option value="hr">HR</option>
+        <option value="developer">Developer</option>
+        <option value="designer">Designer</option>
+        <option value="seo">SEO</option>
+        <option value="bde">BDE</option>
+    </select><br>
+
 
             <div class="mb-3">
               <label class="form-label">Skills:</label>
@@ -272,9 +301,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
       
-        $(document).ready(function(){
+ $(document).ready(function(){
           var update_ID = "";
-
+var divUserID = "";
             // Delete user
             $('.delete-user').click(function(event){
                 event.preventDefault();
@@ -324,6 +353,7 @@
                           $('#editAddress').val(user.address);
                           $('#editCountry').val(user.country);
                           $('#editCity').val(user.city);
+                          $('#editdepartment').val(user.department);
                           $('#editNote').val(user.note);
                           $('#edit_id').val(user.id);
                           update_ID = user.id;
@@ -348,7 +378,7 @@
 
 
               $(document).on('click', '.update_button',function(){
-              const update_ID =  $('#user-id-update').val();
+              var update_ID =  $('#user-id-update').val();
                
                 var data = {
                     _token: '{{ csrf_token() }}',  
@@ -359,6 +389,7 @@
                     editGender: $('#editGender').val(),
                     editCountry: $('#editCountry').val(),
                     editCity: $('#editCity').val(),
+                    editCity: $('#editdepartment').val(),
                     //editSkills: $('#editSkills').val(), 
                     editNote: $('#editNote').val()
                 };
@@ -384,7 +415,67 @@
               
             });
 
+            $(document).ready(function () {
+    $('#filter-input').on('keyup', function () {
+        var search = $(this).val();
+
+        $.ajax({
+            url: '{{ route("filter.results") }}',  
+            type: 'GET',
+            data: { search: search },
+            success: function (response) {
+                console.log(response); 
+
+                if (response && response.users) {
+                 
+                    $('.row').hide();
+                    $('#user-list').empty();
+                    if (response.users.length > 0) {
+                        response.users.forEach(function (user, index) {
+                            var userRow = `
+                                <div class="row" id="user-${user.id}">
+                                    <div class="row-item">${index + 1}</div>
+                                    <div class="row-item">${user.name}</div>
+                                    <div class="row-item">${user.email}</div>
+                                    <div class="row-item">${user.phone}</div>
+                                    <div class="row-item">${user.address}</div>
+                                    <div class="row-item">${user.gender}</div>
+                                    <div class="row-item">${user.country}</div>
+                                    <div class="row-item">${user.city}</div>
+                                    <div class="row-item">${user.department}</div>
+                                    <div class="row-item">${user.skills}</div>
+                                    <div class="row-item">${user.note}</div>
+                                    <div class="row-item">
+                                        <button class="update-user" data-id="${user.id}" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                                        <button class="delete-user" data-id="${user.id}">Delete</button>
+                                    </div>
+                                </div>
+                            `;
+                            $('#user-list').append(userRow);
+                        });
+                    } else {
+                        $('#user-list').html('<p>No results found.</p>');
+                    }
+                } else {
+                    console.log('No users found or response is malformed.');
+                    $('#user-list').html('<p>No results found.</p>');
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
         });
+    });
+});
+
+// ---->
+$('#manageUsers').on('click', function(){
+  alert('testtest');
+
+});
+
+
+});
 
        
     </script>

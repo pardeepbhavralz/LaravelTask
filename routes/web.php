@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\ValidController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,7 +27,9 @@ Route::delete('/user-delete/{id}', [UserDashboardController::class,   'delete'])
 Route::get('/edit-user/{id}',[UserDashboardController::class,'edit'])->name('edit.user');
 
 Route::post('/update-user/{id}', [UserDashboardController::class,'update']);
+Route::get('/filter.results', [UserDashboardController::class,'filter'])->name('filter.results');
 
+Route::post('/valid-email', [ValidController ::class,'emailValid'])->name('valid-email');
 
 
 

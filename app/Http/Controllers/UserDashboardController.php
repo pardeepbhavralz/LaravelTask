@@ -26,6 +26,7 @@ class UserDashboardController extends Controller
         'gender' => 'required',
         'country' => 'required',
         'city' => 'required',
+        'department'=>'required',
         'skills' => 'required|array',
         'note' => 'required',
     ]);
@@ -37,6 +38,7 @@ class UserDashboardController extends Controller
     $userDashboard->address = $request->address;
     $userDashboard->country = $request->country;
     $userDashboard->city = $request->city;
+    $userDashboard->department = $request->department;
     $userDashboard->skills = implode(',', $request->skills); 
 
     $userDashboard->gender = $request->gender;
@@ -59,7 +61,7 @@ class UserDashboardController extends Controller
     public function show()
 {
     // Retrieve all records from UserDashboard table
-    $showUserDashboard = UserDashboard::all();
+    $showUserDashboard = UserDashboard::orderBy('created_at', 'desc')->get();
     //dd($showUserDashboard);
     // Pass the data to the view
     return view('dashboard', compact('showUserDashboard'));
@@ -117,8 +119,17 @@ public function delete($id){
 
 }
 
-    public function destroy(UserDashboard $userDashboard)
+    public function filter(Request $request)
     {
-  
+        $search = $request->get('search');
+
+        // Filter users based on the search query
+        $filteredUsers = UserDashboard::where('name', 'like', '%' . $search . '%')
+                             ->orWhere('email', 'like', '%' . $search . '%')
+                             ->orWhere('phone', 'like', '%' . $search . '%')
+                             ->get();
+    
+        return response()->json(['users' => $filteredUsers]);
+
     }
 }
